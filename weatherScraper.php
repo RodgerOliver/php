@@ -1,8 +1,6 @@
-<?php include "displayHTML.php"; ?>
-<?php include "withoutAccent.php"; ?>
-
 <?php
-
+	include "makeHTML.php";
+	include "withoutAccent.php";
 	$weather = '';
 	$err = '';
 	$typed_city = '';
@@ -31,18 +29,18 @@
 					$title = $splitted[0];
 					$body = $splitted[1];
 					$str = $title."<br>".$body;
-					$weather = display("div", $str, ['class="alert alert-info my-4"', 'role="alert"']);
+					$weather = makeHTML("div", $str, ['class="alert alert-info my-4"', 'role="alert"']);
 				} else {
 					$str = "Sorry, something went wrong with our system, please try later.";
-					$err = display("div", $str, ['class="alert alert-danger my-4"', 'role="alert"']);
+					$err = makeHTML("div", $str, ['class="alert alert-danger my-4"', 'role="alert"']);
 				}
 			} else {
 				$str = "Sorry, something went wrong with our system, please try later.";
-				$err = display("div", $str, ['class="alert alert-danger my-4"', 'role="alert"']);
+				$err = makeHTML("div", $str, ['class="alert alert-danger my-4"', 'role="alert"']);
 			}
 		} else {
 			$str = "City not found. Make sure that this city exists.";
-			$err = display("div", $str, ['class="alert alert-danger my-4"', 'role="alert"']);
+			$err = makeHTML("div", $str, ['class="alert alert-danger my-4"', 'role="alert"']);
 		}
 	}
 

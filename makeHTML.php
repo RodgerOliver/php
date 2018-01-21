@@ -1,15 +1,15 @@
 <?php
-function display($el, $text, $arr="") {
+function makeHTML($el, $text, $arr="") {
 	$attrs = "";
 	if($arr) {
-		foreach($arr as $key => $value) {
+		foreach($arr as $value) {
 			$attrs .= " ".$value;
 		}
 	}
 	return "<$el$attrs>$text</$el>";
 }
 
-function _display($el, $arr="") {
+function _makeHTML($el, $arr="") {
 	$attrs = "";
 	if($arr) {
 		foreach($arr as $key => $value) {

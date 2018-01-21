@@ -7,6 +7,7 @@
 <body>
 
 	<?php
+		include "makeHTML.php";
 		$msg = '';
 		$name = '';
 		$email = '';
@@ -33,7 +34,7 @@
 			}
 
 			if($alert !== "") {
-				$msg = display("div", "<strong>Something went wrong</strong><br>".$alert, ['class="alert alert-danger"', 'role="alert"']);
+				$msg = makeHTML("div", "<strong>Something went wrong</strong><br>".$alert, ['class="alert alert-danger"', 'role="alert"']);
 			} else {
 				$emailTo = "timeline.mb@gmail.com";
 				$subject = "Your Website Email";
@@ -42,25 +43,13 @@
 
 				if(mail($emailTo, $subject, $body, $headers)) {
 					$str = "Your email was correctly sent! We will contact you soon ".$name.".";
-					$msg = display("div", $str, ['class="alert alert-success"', 'role="alert"']);
+					$msg = makeHTML("div", $str, ['class="alert alert-success"', 'role="alert"']);
 				} else {
 					$str = "Something went wrong, try to send later.";
-					$msg = display("div", $str, ['class="alert alert-danger"', 'role="alert"']);
+					$msg = makeHTML("div", $str, ['class="alert alert-danger"', 'role="alert"']);
 				}
 			}
 
-		}
-
-		function display($el, $text, $arr="") {
-			if($arr) {
-				$attrs = "";
-				foreach($arr as $value) {
-					$attrs .= $value." ";
-				}
-				return "<$el $attrs>$text</$el>";
-			} else {
-				return "<$el>$text</$el>";
-			}
 		}
 	?>
 
