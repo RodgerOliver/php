@@ -4,13 +4,14 @@
 	session_start();
 	// configure the db connection var
 	// server	username	password	dbName
-	$link = mysqli_connect("177.185.176.139", "usersDB-323604c5", "Rodger120201", "usersDB-323604c5");
+	$link = mysqli_connect("127.0.0.1", "root", "Rodger120201", "usersdb");
 	// hand error connection to db
 	if(mysqli_connect_error()) {
 		die("Error connecting to the database");
 	} else {
-		if(isset($_POST["email"]) && isset($_POST["password"])) {
+		if(isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["name"])) {
 			// format the inputs
+			$name = mysqli_real_escape_string($link, $_POST["name"]);
 			$email = mysqli_real_escape_string($link, $_POST["email"]);
 			$password = mysqli_real_escape_string($link, $_POST["password"]);
 			// make query
@@ -23,10 +24,12 @@
 				echo "You are already registered";
 			} else {
 				// make query
-				$query = "INSERT INTO `users` (email, password) VALUES ('".$email."', '".$password."')";
+				$query = "INSERT INTO `users` (name, email, password) VALUES ('".$name."', '".$email."', '".$password."')";
+				echo $query;
 				// run query and verify the completion
 				if(mysqli_query($link, $query)) {
 					// setup the session vars
+					$_SESSION["name"] = $name;
 					$_SESSION["email"] = $email;
 					$_SESSION["password"] = $password;
 					// redirect
@@ -51,6 +54,9 @@
 	<div class="container my-4">
 		<h1 class="my-3">Sign Up Form</h1>
 		<form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
+			<fieldset class="form-group">
+				<input class="form-control" type="text" name="name" placeholder="Name" required>
+			</fieldset>
 			<fieldset class="form-group">
 				<input class="form-control" type="email" name="email" placeholder="Email" required>
 			</fieldset>

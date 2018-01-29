@@ -2,7 +2,7 @@
 
 	// mysqli() vs mysql()
 	// server	username	password	dbName
-	$link = mysqli_connect("shareddb-f.hosting.stackcp.net", "usersDB-323604c5", "Rodger120201", "usersDB-323604c5");
+	$link = mysqli_connect("localhost", "root", "Rodger120201", "usersdb");
 	if(mysqli_connect_error()) {
 		die("Error connecting to the database");
 	} else {
