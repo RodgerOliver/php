@@ -1,26 +1,4 @@
-<?php
-
-	session_start();
-	$diary = '';
-	$link = mysqli_connect("127.0.0.1", "root", "Rodger120201", "usersdb");
-	if(mysqli_connect_error()) {
-		die("Database connection failed.");
-	}
-	if(isset($_COOKIE["id"])) {
-		$_SESION["id"] = $_COOKIE["id"];
-	}
-	if(isset($_SESSION["id"])) {
-		$logoutLink = "<a class='btn btn-success-outline' href='secretDiary.php?logout=1'>Log Out</a>";
-		$id = $_SESSION["id"];
-		$query = "SELECT `diary` FROM `users` WHERE `id`='".$id."' LIMIT 1";
-		$result = mysqli_query($link, $query);
-		$row = mysqli_fetch_array($result);
-		$diary = $row["diary"];
-	} else {
-		header("location: secretDiary.php");
-	}
-
-?>
+<?php include "loggedInPHP.php"; ?>
 
 <!DOCTYPE html>
 <html>
@@ -70,7 +48,7 @@
 		</div>
 	</nav>
 	<div id="container" class="container">
-		<textarea id="diary" class="form-control"><?php print_r($diary); ?></textarea>
+		<textarea id="diary" class="form-control"><?php echo $diary; ?></textarea>
 	</div>
 
 
@@ -80,6 +58,7 @@
 <script>
 
 	$("#diary").bind("input propertychange", function() {
+		// ajax request to update the database
 		$.ajax({
 			method: "POST",
 			url: "updateDatabase.php",
