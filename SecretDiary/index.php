@@ -40,6 +40,7 @@
 		#toggleForm:hover {
 			text-decoration: underline;
 			color: #2be62b;
+			cursor: pointer;
 		}
 
 		.signup {
@@ -73,11 +74,8 @@
 						Stay Logged In
 					</label>
 				</fieldset>
-				<fieldset class="form-group login">
+				<fieldset class="form-group">
 					<input class="btn btn-primary" type="submit" name="login" value="Log In">
-				</fieldset>
-				<fieldset class="form-group signup">
-					<input class="btn btn-primary" name="signup" type="submit" value="Sign Up">
 				</fieldset>
 				<p><a id="toggleForm">Sign Up</a></p>
 			</form>
@@ -94,8 +92,12 @@
 		$(".signup").toggle();
 		$(".login").toggle();
 		if($(".login").css("display") !== "none") {
+			$("input[type='submit']").attr("value", "Log In");
+			$("input[type='submit']").attr("name", "login");
 			$("#toggleForm").text("Sign Up");
 		} else {
+			$("input[type='submit']").attr("value", "Sign Up");
+			$("input[type='submit']").attr("name", "signup");
 			$("#toggleForm").text("Log In");
 		}
 	});
