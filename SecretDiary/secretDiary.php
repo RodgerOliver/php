@@ -1,9 +1,20 @@
 <?php
-
-	include "makeHTML.php";
+	
+	session_start();
+	include "../makeHTML.php";
 	$link = mysqli_connect("127.0.0.1", "root", "Rodger120201", "usersdb");
 	if(mysqli_connect_error()) {
 		die("Database connection failed.");
+	}
+
+	if(isset($_GET["logout"])) {
+		if ($_GET["logout"] === "1") {
+			session_unset();
+			setcookie("id", "", time() - (3600));
+			$_COOKIE["id"] = "";
+		}
+	} elseif(isset($_SESSION["id"]) || isset($_COOKIE["id"])) {
+		header("location: loggedIn.php");
 	}
 	if($_SERVER["REQUEST_METHOD"] === "POST") {
 		if($_POST && $_POST["email"] && $_POST["password"]) {
@@ -16,6 +27,12 @@
 				if($row["email"] === $email) {
 					$hash = $row["password"];
 					if(password_verify($password, $hash)) {
+						$_SESSION["id"] = $row["id"];
+						if(isset($_POST["stayLogin"])) {
+							if ($_POST["stayLogin"] === "1") {
+								setcookie("id", mysqli_insert_id($link), time() + 3600);
+							}
+						}
 						header("location: loggedIn.php");
 					} else {
 						$str = "Invalid password.";
@@ -32,6 +49,10 @@
 				if($result->num_rows === 0) {
 					$query = "INSERT INTO `users` (`email`, `password`) VALUES ('".$email."', '".$hash."')";
 					if(mysqli_query($link, $query)) {
+						$_SESSION["id"] = mysqli_insert_id($link);
+						if($_POST["stayLogin"] === "on") {
+							setcookie("id", mysqli_insert_id($link), time() + 3600);
+						}
 						header("location: loggedIn.php");
 					} else {
 						$str = "You could not be registered, please try again later.";
