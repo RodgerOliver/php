@@ -8,7 +8,7 @@
 	}
 	// if cookie set session
 	if(isset($_COOKIE["id"])) {
-		$_SESION["id"] = $_COOKIE["id"];
+		$_SESSION["id"] = $_COOKIE["id"];
 	}
 	// if session
 	if(isset($_SESSION["id"])) {

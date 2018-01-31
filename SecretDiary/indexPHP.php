@@ -39,7 +39,7 @@
 						if(isset($_POST["stayLogin"])) {
 							if ($_POST["stayLogin"] === "1") {
 								// set cookie for 1 hour
-								setcookie("id", mysqli_insert_id($link), time() + 3600);
+								setcookie("id", $_SESSION["id"], time() + 3600);
 							}
 						}
 						// redirect
