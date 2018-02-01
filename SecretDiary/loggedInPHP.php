@@ -13,7 +13,7 @@
 	// if session
 	if(isset($_SESSION["id"])) {
 		// logout btn
-		$logoutLink = "<a class='btn btn-success-outline' href='index.php?logout=1'>Log Out</a>";
+		$logoutLink = '<form action="index.php" method="POST"><input class="btn btn-success-outline" type="submit" name="logout" value="Log Out"></form>';
 		$id = $_SESSION["id"];
 		// select diary of the user
 		$query = "SELECT `diary` FROM `users` WHERE `id`='".$id."' LIMIT 1";
