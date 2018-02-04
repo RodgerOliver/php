@@ -2,6 +2,8 @@
 
 	require "classes/Database.php";
 
+	session_start();
+
 	$db = new Database;
 
 	if($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -17,39 +19,49 @@
 				$db->execute();
 
 				if($db->lastInsertId()) {
-					$msg = '<div class="alert alert-success">Post added</div>';
+					flash("success", "Post added.");
 				}
 			} else {
-				$msg = '<div class="alert alert-danger">Please fill all the fields</div>';
+				flash("danger", "Please fill all the fields.");
 			}
 
 		} elseif(isset($_POST["update"])) {
-			$id = (int)$_POST["id"];
-			$title = $_POST["title"];
-			$body = $_POST["body"];
+			if ($_POST["id"] !== "") {
+				$id = (int)$_POST["id"];
+				$title = $_POST["title"];
+				$body = $_POST["body"];
 
-			if($title === "") {
-				$db->query("UPDATE `posts` SET `body` = :body WHERE `id` = :id");
-				$db->bind(":body", $body);
-			} elseif($body === "") {
-				$db->query("UPDATE `posts` SET `title` = :title WHERE `id` = :id");
-				$db->bind(":title", $title);
-			} elseif($title === "" && $body === "") {
-				return;
+				if($title === "") {
+					$db->query("UPDATE `posts` SET `body` = :body WHERE `id` = :id");
+					$db->bind(":body", $body);
+				} elseif($body === "") {
+					$db->query("UPDATE `posts` SET `title` = :title WHERE `id` = :id");
+					$db->bind(":title", $title);
+				} elseif($title === "" && $body === "") {
+					return;
+				} else {
+					$db->query("UPDATE `posts` SET `title` = :title, `body` = :body WHERE `id` = :id");
+					$db->bind(":title", $title);
+					$db->bind(":body", $body);
+				}
+
+				$db->bind(":id", $id);
+				$db->execute();
+				flash("success", "Post updated.");
 			} else {
-				$db->query("UPDATE `posts` SET `title` = :title, `body` = :body WHERE `id` = :id");
-				$db->bind(":title", $title);
-				$db->bind(":body", $body);
+				flash("danger", "Please fill the ID field and other field to update.");
 			}
 
-			$db->bind(":id", $id);
-			$db->execute();
-
 		} elseif(isset($_POST["delete"])) {
-			$id = $_POST["id"];
-			$db->query("DELETE FROM `posts` WHERE id = :id");
-			$db->bind(":id", $id);
-			$db->execute();
+			if($_POST["id"] !== "") {
+				$id = $_POST["id"];
+				$db->query("DELETE FROM `posts` WHERE id = :id");
+				$db->bind(":id", $id);
+				$db->execute();
+				flash("success", "Post deleted.");
+			} else {
+				flash("danger", "Please fill the ID field to delete a post.");
+			}
 		}
 	}
 
@@ -64,6 +76,21 @@
 		}
 	}
 
+	function getSession($session) {
+		if ($_SERVER["REQUEST_METHOD"] === "GET") {
+			if(isset($_SESSION["$session"])) {
+				$msg = $_SESSION["$session"];
+				session_destroy();
+				return $msg;
+			}
+		}
+	}
+
+	function flash($type, $text) {
+		$_SESSION["msg"] = "<div class=\"alert alert-$type\">$text</div>";
+		header("location: index.php");
+	}
+
 ?>
 
 <!DOCTYPE html>
@@ -75,7 +102,7 @@
 <body>
 
 	<div class="container mt-3">
-		<?php if(isset($msg)) {echo $msg;} ?>
+		<?= getSession("msg"); ?>
 		<h1>Add Post</h1>
 		<form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
 			<fieldset class="form-group">
